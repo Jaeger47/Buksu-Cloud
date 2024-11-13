@@ -1,5 +1,5 @@
 [build]
-  publish = "COT CLOUD"
+  publish = "web-app"
   functions = "netlify/functions"
 
 [[redirects]]
