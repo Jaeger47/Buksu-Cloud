@@ -3,7 +3,7 @@ let files = [];
 
 async function fetchFiles() {
     try {
-        const response = await fetch("/files");
+        const response = await fetch("/.netlify/functions/files");
         files = await response.json();
         displayFiles();
     } catch (error) {
@@ -30,7 +30,7 @@ async function login() {
     }
 
     try {
-        const response = await fetch("/login", {
+        const response = await fetch("/.netlify/functions/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,8 +53,6 @@ async function login() {
         alert("An error occurred. Please try again.");
     }
 }
-
-
 
 function publicAccess() {
     currentUser = "public";
@@ -101,7 +99,7 @@ function uploadFile() {
 
     // Create a new XMLHttpRequest to handle progress tracking
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/upload", true);
+    xhr.open("POST", "/.netlify/functions/upload", true);
 
     // Update the progress bar during upload
     xhr.upload.onprogress = function (event) {
@@ -173,7 +171,7 @@ function displayFiles() {
             const deleteCell = document.createElement("td");
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
-            deleteButton.onclick = () => deleteFile(index);
+            deleteButton.onclick = () => deleteFile(file.name);
             deleteCell.appendChild(deleteButton);
             row.appendChild(deleteCell);
         }
@@ -182,42 +180,43 @@ function displayFiles() {
     });
 }
 
-function toggleVisibility(fileName, isVisible) {
-    const visibility = isVisible ? "all" : "hidden";
-    fetch("/update-visibility", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName, visibility })
-    })
-    .then(() => fetchFiles())
-    .catch(error => console.error("Error updating visibility:", error));
+async function toggleVisibility(fileName, isVisible) {
+    try {
+        const response = await fetch("/.netlify/functions/update-visibility", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ fileName, visibility: isVisible ? "all" : "hidden" }),
+        });
+
+        if (response.ok) {
+            alert("Visibility updated successfully.");
+        } else {
+            alert("Failed to update visibility.");
+        }
+    } catch (error) {
+        console.error("Error updating visibility:", error);
+    }
 }
 
-function deleteFile(index) {
-    const file = files[index];
-    fetch("/delete", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filePath: file.url, fileName: file.name })
-    })
-    .then(() => fetchFiles())
-    .catch(error => console.error("Error deleting file:", error));
-}
+async function deleteFile(fileName) {
+    try {
+        const response = await fetch("/.netlify/functions/delete", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ fileName }),
+        });
 
-function goToChangePassword() {
-    window.location.href = "/change-password.html";
+        if (response.ok) {
+            alert("File deleted successfully.");
+            fetchFiles();
+        } else {
+            alert("Failed to delete file.");
+        }
+    } catch (error) {
+        console.error("Error deleting file:", error);
+    }
 }
-
-function logout() {
-    currentUser = null;
-    localStorage.removeItem("currentUser");
-    document.getElementById("file-manager").style.display = "none";
-    document.getElementById("top-nav").style.display = "none";
-    document.getElementById("login").style.display = "block";
-}
-
-// Check for logged-in user in localStorage on load
-document.addEventListener("DOMContentLoaded", () => {
-    currentUser = localStorage.getItem("currentUser");
-    if (currentUser) loadFileManager();
-});
