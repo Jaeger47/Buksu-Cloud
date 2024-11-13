@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager Web App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <div id="top-nav" style="display: none;">
+        <span id="nav-title">COT CLOUD - File Manager</span>
+        <button onclick="goToChangePassword()">Change Password</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username (Admin only)">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <button onclick="publicAccess()">Public Access</button>
+    </div>
+
+    <!-- File Manager Area -->
+    <div id="file-manager" style="display: none;">
+        <h2>File Manager</h2>
+        
+        <!-- Admin Controls -->
+        <div id="admin-controls" style="display: none;">
+            <div style="display: flex; align-items: center;">
+                <input type="file" id="fileUpload" style="margin-right: 5px;">
+                <button onclick="uploadFile()">Upload</button>
+            </div>
+        </div>
+
+        <!-- File Table -->
+        <table id="fileTable">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Download</th>
+                    <th>Visible to Public</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="fileList"></tbody>
+        </table>
+    </div>
+
+    <!-- Upload Progress Popup -->
+    <div id="uploadProgressPopup" style="display: none;">
+        <div id="uploadProgressText">Uploading...</div>
+        <progress id="uploadProgressBar" value="0" max="100"></progress>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
