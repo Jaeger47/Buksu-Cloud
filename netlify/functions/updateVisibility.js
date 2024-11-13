@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const jsonFilePath = path.join(__dirname, "../../files.json");
+const jsonFilePath = path.join(__dirname, "../../web-app/files.json");
 
 exports.handler = async (event) => {
     const { fileName, visibility } = JSON.parse(event.body);

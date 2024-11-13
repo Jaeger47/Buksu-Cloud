@@ -2,7 +2,7 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const path = require("path");
 
-const credentialsFilePath = path.join(__dirname, "../../credentials.json");
+const credentialsFilePath = path.join(__dirname, "../../web-app/credentials.json");
 
 exports.handler = async (event) => {
     const { userType, password } = JSON.parse(event.body);

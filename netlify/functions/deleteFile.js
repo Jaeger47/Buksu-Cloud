@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const uploadsDir = path.join(__dirname, "../../web-app/uploads");
-const jsonFilePath = path.join(__dirname, "../../files.json");
+const jsonFilePath = path.join(__dirname, "../../web-app/files.json");
 
 exports.handler = async (event) => {
     const { fileName } = JSON.parse(event.body);
